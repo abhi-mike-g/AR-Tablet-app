@@ -44,7 +44,16 @@ btnPrep.onclick = async () => {
   });
 
   // mock result
-  lastPred = await fetch('/mock_results/sample.json').then(r=>r.json());
+  const form = new FormData();
+// get the JPEG blob from your preprocessed canvas:
+const blob = await new Promise<Blob>(res => prepCanvas.toBlob(res, 'image/jpeg'));
+form.append('file', blob, 'capture.jpg');
+
+lastPred = await fetch('/api/predict', {
+  method: 'POST',
+  body: form
+}).then(r => r.json());
+
   alert('Pre-processing complete; ready for overlay.');
 };
 
